@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Host\ApplicationConfiguration.cpp" />
     <ClCompile Include="Browser\Page.cpp" />
     <ClCompile Include="Host\ApplicationRuntime.cpp" />
     <ClCompile Include="Host\IWindow.cpp" />
@@ -18,6 +19,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Host\ApplicationConfiguration.h" />
     <ClInclude Include="Browser\Page.h" />
     <ClInclude Include="Host\ApplicationRuntime.h" />
     <ClInclude Include="Host\IWindow.h" />

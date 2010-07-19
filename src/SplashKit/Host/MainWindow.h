@@ -13,9 +13,10 @@
 #include <string>
 #include "IWindow.h"
 #include "ApplicationRuntime.h"
+#include "ApplicationConfiguration.h"
 #include "../Browser/Page.h"
 
-class MainWindow : IWindow
+class MainWindow : public IWindow
 {
 private:
     HINSTANCE _hInstance;
@@ -24,19 +25,20 @@ private:
     IWebView* _webView;
     HWND _viewWindow;
     bool _isShown;
+    ApplicationConfiguration *_configuration;
 
 protected:
-    virtual bool HandleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
-    MainWindow(ApplicationRuntime * instance);
+    MainWindow(ApplicationRuntime *instance, ApplicationConfiguration *configuration);
     ~MainWindow(void);
 
     void Navigate(Page *page);
     void Navigate(string *str);
     void Navigate(LPCSTR str);
-    void Navigate(LPCSTR str, vector<JSStaticFunction>* functions);
-
+    
+    virtual bool HandleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    
     void Show();
 };
 

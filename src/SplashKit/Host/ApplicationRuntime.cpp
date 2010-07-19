@@ -1,11 +1,11 @@
 #include "ApplicationRuntime.h"
 
-std::vector<IWindow> _windows;
+std::vector<IWindow*> _windows;
 
 ApplicationRuntime::ApplicationRuntime(HINSTANCE instance)
 {
     Instance = instance;
-    _windows = std::vector<IWindow>();
+    _windows = std::vector<IWindow*>();
 }
 
 ApplicationRuntime::~ApplicationRuntime()
@@ -23,19 +23,30 @@ int ApplicationRuntime::Run()
     return msg.wParam;
 }
 
+void ApplicationRuntime::Enlist(IWindow *window)
+{
+    _windows.push_back(window);
+}
+
 LRESULT CALLBACK ApplicationRuntime::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int wmId, wmEvent;
     PAINTSTRUCT ps;
     HDC hdc;
 
-    switch (message) {
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
+    switch (message) 
+    {
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            break;
 
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        default:
+            for (int i = 0; i < _windows.size(); i++)
+            {
+                _windows[i]->HandleMessage(hWnd, message, wParam, lParam);
+            }
+
+            return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }

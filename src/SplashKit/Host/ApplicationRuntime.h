@@ -4,8 +4,6 @@
 
 #pragma once
 
-
-
 class ApplicationRuntime
 {
 public:
@@ -15,14 +13,9 @@ public:
     ApplicationRuntime(HINSTANCE instance);
     ~ApplicationRuntime();
 
-    // Methods
-    template <class T> T* CreateNewWindow() 
-    {
-        auto window = new T(_hInstance);
-        _windows.push_back(*window);
-        return window;
-    }
+    void Enlist(IWindow *window);
 
+    // Methods
     int Run();
 
     static LRESULT CALLBACK ApplicationRuntime::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

@@ -20,17 +20,6 @@ string Page::Render()
 void Page::RenderInternal(std::ostream* html)
 {
     *html << "<html>" << endl;
-    RenderMainContent(html);
+    *html << "Hello from SplashKit, hosted in WebKit!" << endl;
     *html << "</html>" << endl;
-}
-
-void Page::RenderMainContent(std::ostream* html)
-{
-    *html << "Hello from SplashKit!" << endl;
-}
-
-void Page::AddScript(LPCSTR name, JSObjectCallAsFunctionCallback callback)
-{
-    JSStaticFunction f = { "mymethod", callback, kJSPropertyAttributeReadOnly };
-    _scripts.push_back(f);
 }

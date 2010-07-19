@@ -1,10 +1,12 @@
 #include "MainWindow.h"
 #include "ApplicationRuntime.h"
 
-MainWindow::MainWindow(ApplicationRuntime *runtime)
+MainWindow::MainWindow(ApplicationRuntime *runtime, ApplicationConfiguration *configuration)
 {
     _isShown = false;
     _hInstance = runtime->Instance;
+    _configuration = configuration;
+    runtime->Enlist(this);
 }
 
 MainWindow::~MainWindow(void)
@@ -76,7 +78,12 @@ void MainWindow::Show()
 
     IWebViewPrivate* viewExt;
     _webView->QueryInterface(IID_IWebViewPrivate, (void**)&viewExt);
-    
+
+    if (_configuration->isInViewSourceMode())
+    {
+        viewExt->setInViewSourceMode(TRUE);
+    }
+
     hr = viewExt->viewWindow((OLE_HANDLE*) &_viewWindow);
     viewExt->Release();
     if (FAILED(hr) || !_viewWindow)
@@ -99,6 +106,7 @@ bool MainWindow::HandleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         case WM_SIZE:
             if (!_webView)
                 break;
+
             RECT rcClient;
             GetClientRect(_hMainWnd, &rcClient);
             MoveWindow(_viewWindow, 0, 0, rcClient.right, rcClient.bottom, TRUE);
@@ -110,8 +118,7 @@ bool MainWindow::HandleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 void MainWindow::Navigate(Page *page)
 {
     auto str = page->Render();
-    auto scripts = page->GetScripts();
-    Navigate(str.c_str(), &scripts);
+    Navigate(str.c_str());
 }
 
 void MainWindow::Navigate(string *str)
@@ -173,21 +180,11 @@ static void AddJSClasses(JSGlobalContextRef context, vector<JSStaticFunction>* f
 
 void MainWindow::Navigate(LPCSTR str)
 {
-    Navigate(str, NULL);
-}
-
-void MainWindow::Navigate(LPCSTR str, vector<JSStaticFunction>* functions)
-{
     IWebFrame* frame;
     _webView->mainFrame(&frame);
     const CComBSTR bstr(str);
 
-    AddJSClasses(frame->globalContext(), functions);
+    //AddJSClasses(frame->globalContext(), NULL);
     frame->loadHTMLString(bstr, 0);
     frame->Release();
 }
-
-
-
-
-
