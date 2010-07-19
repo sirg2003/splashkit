@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include "Host/ApplicationRuntime.h"
 #include "Host/MainWindow.h"
+#include <SimpleIni.h>
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
